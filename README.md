@@ -1,24 +1,10 @@
-# README
+Self-study for WebAuthn. How would I build a passwordless web app?
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the ruby copy for https://github.com/jimjh/webauthn-practice.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# Plan
+- [x] start simple rails app
+- [x] implement basic db layer
+- [x] store challenge in a sensible place
+- [ ] create user (register)
+- [ ] login user (authenticate)

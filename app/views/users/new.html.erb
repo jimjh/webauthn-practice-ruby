@@ -1,0 +1,10 @@
+<h1>Register</h1>
+<%= form_with model: @user, id: 'signup' do |form| %>
+  <%= form.hidden_field :challenge, value: @challenge, name: 'challenge' %>
+  <%= form.label :name, "User Name"%>
+  <%= form.text_field :name %>
+  <%= form.label :display_name, "Display Name"%>
+  <%= form.text_field :display_name %>
+  <%= form.submit %>
+<% end %>
+<%= javascript_include_tag "register" %>
