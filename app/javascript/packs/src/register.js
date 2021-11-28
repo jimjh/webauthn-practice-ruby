@@ -13,7 +13,7 @@ async function submitForm(form) {
   /* A human-palatable name for the user account, intended only for display. */
   const displayName = form.elements['user_display_name'].value;
 
-  const hashURL = new URL(location.origin + '/hash_user_id');
+  const hashURL = new URL(location.origin + '/register_options');
   hashURL.search = new URLSearchParams({ user_name: userName, display_name: displayName }).toString();
   const webauthnOptions = await fetch(hashURL, {
     method: 'GET',
@@ -21,8 +21,6 @@ async function submitForm(form) {
   }).then(r => r.json());
 
   const credential = await create({ publicKey: webauthnOptions });
-  credential.userName = userName
-  credential.displayName = displayName
   // TODO error handling
 
   await fetch('/users', {
@@ -31,7 +29,11 @@ async function submitForm(form) {
       'Content-Type': 'application/json; charset=utf-8',
       'X-CSRF-Token': csrfToken
     },
-    body: JSON.stringify(credential)
+    body: JSON.stringify({
+      user_name: userName,
+      display_name: displayName,
+      credential: credential
+    })
   });
   // TODO error handling
 

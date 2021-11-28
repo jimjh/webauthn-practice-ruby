@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2021_11_27_003322) do
   end
 
   create_table "credentials", force: :cascade do |t|
-    t.binary "credential_id", limit: 1203, null: false
+    t.binary "credential_id", limit: 1364, null: false
     t.binary "credential_public_key", null: false
     t.integer "sign_count", null: false
     t.string "aaguid", limit: 32
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2021_11_27_003322) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_credentials_on_user_id"
+    t.index ["credential_id"], name: "index_credentials_on_credential_id"
   end
 
   add_foreign_key :credentials, :users, column: :user_id, primary_key: :id, on_delete: :cascade

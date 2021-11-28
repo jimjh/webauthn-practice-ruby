@@ -5,13 +5,12 @@ async function submitForm(form) {
   const userName = form.elements['name'].value;
   const csrfToken = form.elements['authenticity_token'].value;
 
-  const options = await fetch('/credentials?user_name=' + userName, {
+  const options = await fetch('/authenticate_options?user_name=' + userName, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
   }).then(r => r.json());
 
   const assertion = await get({ publicKey: options });
-  assertion.userName = userName
 
   await fetch('/authenticate', {
     method: 'POST',
@@ -19,9 +18,12 @@ async function submitForm(form) {
       'Content-Type': 'application/json; charset=utf-8',
       'X-CSRF-Token': csrfToken
     },
-    body: JSON.stringify(assertion)
+    body: JSON.stringify({
+      user_name: userName,
+      assertion: assertion
+    })
   });
-}
+};
 
 (function () {
   let form = document.getElementById('login');
