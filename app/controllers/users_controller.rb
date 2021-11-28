@@ -32,6 +32,7 @@ class UsersController < ApplicationController
     # verify credential and challenge
     webauthn_credential = WebAuthn::Credential.from_create(params[:credential])
     webauthn_credential.verify(challenge) 
+
     # create credential and user
     user_id = name_to_id params[:user_name]
     user = User.new(id: user_id, name: params[:user_name], display_name: params[:display_name])
@@ -44,7 +45,11 @@ class UsersController < ApplicationController
       sign_count: webauthn_credential.sign_count,
       aaguid: w.aaguid
     )
-    render json: user.save!
+    user.save!
+
+    # Clean up challenge cookie
+    cookies.delete :challenge
+    render json: user
   end
 
   # Renders login form.
@@ -56,12 +61,13 @@ class UsersController < ApplicationController
     # returns credential IDs to request
     user_id = name_to_id params[:user_name]
     user = User.find(user_id)
-    options = WebAuthn::Credential.options_for_get(allow: user.credentials.map { |c| c.credential_id })
+    options = WebAuthn::Credential.options_for_get allow: user.credentials.map { |c| c.credential_id }
     # store in signed cookie for later verification
     cookies.signed[:challenge] = challenge_cookie(options.challenge)
     render json: options
   end
 
+  # Authenticates given credential for the identified user.
   def authenticate
     user_id = name_to_id params[:user_name]
     user = User.find(user_id)
@@ -74,6 +80,10 @@ class UsersController < ApplicationController
     )
     # Update the stored credential sign count with the value from `webauthn_credential.sign_count`
     stored_credential.update!(sign_count: webauthn_credential.sign_count)
+
+    # Clean up challenge cookie
+    cookies.delete :challenge
+    render json: user
   end
 
   private
