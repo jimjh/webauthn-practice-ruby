@@ -1,0 +1,7 @@
+<h1>Sign In</h1>
+<%= form_with id: 'login' do |form| %>
+  <%= form.label :name, "User Name"%>
+  <%= form.text_field :name %>
+  <%= form.submit %>
+<% end %>
+<%= javascript_pack_tag "src/authenticate" %>
